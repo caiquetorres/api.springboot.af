@@ -7,6 +7,7 @@ import com.app.vehicles.dto.GetVehicleDTO;
 public class Vehicle extends BaseEntity implements ToDTO<GetVehicleDTO> {
     private String model;
     private float dailyRate;
+    private boolean isRented;
 
     // #region Getters and Setters
 
@@ -26,6 +27,14 @@ public class Vehicle extends BaseEntity implements ToDTO<GetVehicleDTO> {
         this.dailyRate = dailyRate;
     }
 
+    public boolean isRented() {
+        return isRented;
+    }
+
+    public void setRented(boolean isRented) {
+        this.isRented = isRented;
+    }
+
     // #endregion
 
     @Override
@@ -35,6 +44,7 @@ public class Vehicle extends BaseEntity implements ToDTO<GetVehicleDTO> {
         dto.setId(this.id);
         dto.setModel(this.model);
         dto.setDailyRate(this.dailyRate);
+        dto.setRented(this.isRented);
 
         return dto;
     }
