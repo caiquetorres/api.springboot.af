@@ -2,7 +2,6 @@ package com.app.clients.services;
 
 import java.util.List;
 import java.util.function.Predicate;
-import javax.management.relation.RelationServiceNotRegisteredException;
 import com.app.clients.dto.CreateClientDTO;
 import com.app.clients.dto.UpdateClientDTO;
 import com.app.clients.models.Client;
@@ -45,9 +44,13 @@ public class ClientService {
         return this.repository.findAll(predicate);
     }
 
-    public List<Reserve> findReserves(int idClient) {
+    public List<Reserve> findReserves(int id) {
+        if (!this.repository.contains(id))
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    DefaultExceptionMessages.entityNotFound(Integer.toString(id)));
+
         return this.reserveService
-                .findAll(reserve -> reserve.getVehicle().getId() == findOne(idClient).getId());
+                .findAll(reserve -> reserve.getClient().getId() == findOne(id).getId());
     }
 
     public void delete(int id) {

@@ -65,6 +65,7 @@ public class ClientController {
     @GetMapping("/{idClient}/reserves")
     public ResponseEntity<GetManyDefaultResponse<GetReserveDTO>> getReserves(
             @PathVariable int idClient) {
+
         List<Reserve> entities = this.clientService.findReserves(idClient);
         GetManyDefaultResponse<GetReserveDTO> getManyDefaultResponse =
                 new GetManyDefaultResponse<>();

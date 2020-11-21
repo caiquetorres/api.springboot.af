@@ -45,9 +45,13 @@ public class VehicleService {
         return this.repository.findAll(predicate);
     }
 
-    public List<Reserve> findReserves(int idVehicle) {
+    public List<Reserve> findReserves(int id) {
+        if (!this.repository.contains(id))
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    DefaultExceptionMessages.entityNotFound(Integer.toString(id)));
+
         return this.reserveService
-                .findAll(reserve -> reserve.getVehicle().getId() == findOne(idVehicle).getId());
+                .findAll(reserve -> reserve.getVehicle().getId() == findOne(id).getId());
     }
 
     public void delete(int id) {

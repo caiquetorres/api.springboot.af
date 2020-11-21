@@ -1,6 +1,9 @@
 package com.app.reserve.controllers;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
+import com.app.common.GetManyDefaultResponse;
 import com.app.reserve.dto.CreateReserveDTO;
 import com.app.reserve.dto.GetReserveDTO;
 import com.app.reserve.models.Reserve;
@@ -26,7 +29,7 @@ public class ReserveController {
     public ReserveController() {
     }
 
-    @PostMapping("clients/{idClient}/vehicles/{idVehicle}")
+    @PostMapping("/clients/{idClient}/vehicles/{idVehicle}")
     public ResponseEntity<GetReserveDTO> createReserve(
             @RequestBody CreateReserveDTO createClientDTO, @PathVariable int idClient,
             @PathVariable int idVehicle, HttpServletRequest request, UriComponentsBuilder builder) {
@@ -36,9 +39,23 @@ public class ReserveController {
         return ResponseEntity.created(uriComponents.toUri()).build();
     }
 
-    @GetMapping("/{idReserve}")
+    @GetMapping("/reserves/{idReserve}")
     public ResponseEntity<GetReserveDTO> getReserve(@PathVariable int idReserve) {
+        System.out.println(idReserve);
         Reserve entity = this.reserveService.findOne(idReserve);
         return ResponseEntity.ok(entity.toDto());
+    }
+
+    @GetMapping("/reserves")
+    public ResponseEntity<GetManyDefaultResponse<GetReserveDTO>> getReserves() {
+        List<Reserve> entities = this.reserveService.findAll(entity -> true);
+        GetManyDefaultResponse<GetReserveDTO> getManyDefaultResponse =
+                new GetManyDefaultResponse<>();
+
+        getManyDefaultResponse.setTotal(entities.size());
+        getManyDefaultResponse.setElements(
+                entities.stream().map(entity -> entity.toDto()).collect(Collectors.toList()));
+
+        return ResponseEntity.ok(getManyDefaultResponse);
     }
 }

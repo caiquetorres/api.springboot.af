@@ -68,8 +68,8 @@ public class VehicleController {
 
     @GetMapping("/{idVehicle}/reserves")
     public ResponseEntity<GetManyDefaultResponse<GetReserveDTO>> getReserves(
-            @PathVariable int idClient) {
-        List<Reserve> entities = this.vehicleService.findReserves(idClient);
+            @PathVariable int idVehicle) {
+        List<Reserve> entities = this.vehicleService.findReserves(idVehicle);
         GetManyDefaultResponse<GetReserveDTO> getManyDefaultResponse =
                 new GetManyDefaultResponse<>();
 
