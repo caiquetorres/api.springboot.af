@@ -4,11 +4,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Predicate;
-import javax.xml.crypto.Data;
 import com.app.clients.models.Client;
 import com.app.clients.services.ClientService;
 import com.app.exceptions.DefaultExceptionMessages;
 import com.app.reserve.dto.CreateReserveDTO;
+import com.app.reserve.dto.UpdateReserveDTO;
 import com.app.reserve.models.Reserve;
 import com.app.reserve.repositories.ReserveRepository;
 import com.app.vehicles.models.Vehicle;
@@ -32,8 +32,8 @@ public class ReserveService {
     public ReserveService() {
     }
 
-    public Reserve save(int idClient, int idVehicle, CreateReserveDTO dto) {
-        Reserve entity = dto.toEntity();
+    public Reserve save(int idClient, int idVehicle, CreateReserveDTO createReserveDto) {
+        Reserve entity = createReserveDto.toEntity();
 
         // If no client or no vehicle those services will throw an exception
         Client clientEntity = this.clientService.findOne(idClient);
@@ -42,34 +42,7 @@ public class ReserveService {
         entity.setClient(clientEntity);
         entity.setVehicle(vehicleEntity);
 
-        Calendar calendar = Calendar.getInstance();
-        Date now = calendar.getTime();
-
-        if (dto.getFrom().before(now))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "The final date cannot be before the current date");
-
-        if (dto.getTo().before(dto.getFrom()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "The final date cannot be before the start date");
-
-        List<Reserve> vehicleReserves = this.vehicleService.findReserves(idVehicle);
-        boolean alreadyReserved = vehicleReserves.stream()
-                .anyMatch(reserve -> isReserved(reserve, dto.getFrom(), dto.getTo()));
-        if (alreadyReserved)
-            throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "This vehicle has already a reserve in those dates");
-
-        calendar.setTime(dto.getFrom());
-        System.out.println(calendar.get(Calendar.DAY_OF_WEEK));
-        if (calendar.get(Calendar.DAY_OF_WEEK) == 7)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "A vehicle cannot be rented on sunday");
-
-        calendar.setTime(dto.getTo());
-        if (calendar.get(Calendar.DAY_OF_WEEK) == 7)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "A vehicle cannot be delivered on sunday");
+        validatePayload(idVehicle, createReserveDto.getFrom(), createReserveDto.getTo());
 
         this.repository.save(entity);
         return entity;
@@ -103,6 +76,37 @@ public class ReserveService {
         return from.after(reserveFrom) && from.before(reserveTo)
                 || to.after(reserveFrom) && to.before(reserveTo) || to.equals(reserveTo)
                 || to.equals(reserveFrom) || from.equals(reserveTo) || from.equals(reserveFrom);
+    }
+
+    private void validatePayload(int idVehicle, Date dtoFrom, Date dtoTo) {
+        Calendar calendar = Calendar.getInstance();
+        Date now = calendar.getTime();
+
+        if (dtoFrom.before(now))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "The final date cannot be before the current date");
+
+        if (dtoTo.before(dtoFrom))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "The final date cannot be before the start date");
+
+        List<Reserve> vehicleReserves = this.vehicleService.findReserves(idVehicle);
+        boolean alreadyReserved =
+                vehicleReserves.stream().anyMatch(reserve -> isReserved(reserve, dtoFrom, dtoTo));
+        if (alreadyReserved)
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "This vehicle has already a reserve in those dates");
+
+        calendar.setTime(dtoFrom);
+        System.out.println(calendar.get(Calendar.DAY_OF_WEEK));
+        if (calendar.get(Calendar.DAY_OF_WEEK) == 7)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "A vehicle cannot be rented on sunday");
+
+        calendar.setTime(dtoTo);
+        if (calendar.get(Calendar.DAY_OF_WEEK) == 7)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "A vehicle cannot be delivered on sunday");
     }
 
     // #endregion
