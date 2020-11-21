@@ -9,6 +9,8 @@ import com.app.clients.dto.UpdateClientDTO;
 import com.app.clients.models.Client;
 import com.app.clients.services.ClientService;
 import com.app.common.GetManyDefaultResponse;
+import com.app.reserve.dto.GetReserveDTO;
+import com.app.reserve.models.Reserve;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,9 +35,8 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<GetClientDTO> createClient(
-            @RequestBody final CreateClientDTO createClientDTO, final HttpServletRequest request,
-            final UriComponentsBuilder builder) {
+    public ResponseEntity<GetClientDTO> createClient(@RequestBody CreateClientDTO createClientDTO,
+            HttpServletRequest request, UriComponentsBuilder builder) {
         Client entity = this.clientService.save(createClientDTO);
         UriComponents uriComponents =
                 builder.path(request.getRequestURI() + "/" + entity.toDto().getId()).build();
@@ -52,6 +53,20 @@ public class ClientController {
     public ResponseEntity<GetManyDefaultResponse<GetClientDTO>> getClients() {
         List<Client> entities = this.clientService.findAll(entity -> true);
         GetManyDefaultResponse<GetClientDTO> getManyDefaultResponse =
+                new GetManyDefaultResponse<>();
+
+        getManyDefaultResponse.setTotal(entities.size());
+        getManyDefaultResponse.setElements(
+                entities.stream().map(entity -> entity.toDto()).collect(Collectors.toList()));
+
+        return ResponseEntity.ok(getManyDefaultResponse);
+    }
+
+    @GetMapping("/{idClient}/reserves")
+    public ResponseEntity<GetManyDefaultResponse<GetReserveDTO>> getReserves(
+            @PathVariable int idClient) {
+        List<Reserve> entities = this.clientService.findReserves(idClient);
+        GetManyDefaultResponse<GetReserveDTO> getManyDefaultResponse =
                 new GetManyDefaultResponse<>();
 
         getManyDefaultResponse.setTotal(entities.size());

@@ -2,9 +2,9 @@ package com.app.common;
 
 import java.util.List;
 
-public class GetManyDefaultResponse<TValue> {
+public class GetManyDefaultResponse<TProxy> {
     private int total;
-    private List<TValue> elements;
+    private List<TProxy> elements;
 
     // #region Getters and Setters
 
@@ -16,11 +16,11 @@ public class GetManyDefaultResponse<TValue> {
         this.total = total;
     }
 
-    public List<TValue> getElements() {
+    public List<TProxy> getElements() {
         return elements;
     }
 
-    public void setElements(List<TValue> elements) {
+    public void setElements(List<TProxy> elements) {
         this.elements = elements;
     }
 

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import com.app.exceptions.DefaultExceptionMessages;
+import com.app.reserve.models.Reserve;
+import com.app.reserve.services.ReserveService;
 import com.app.vehicles.dto.CreateVehicleDTO;
 import com.app.vehicles.dto.UpdateVehicleDTO;
 import com.app.vehicles.models.Vehicle;
@@ -18,6 +20,9 @@ import org.springframework.web.server.ResponseStatusException;
 public class VehicleService {
     @Autowired
     public VehicleRepository repository;
+
+    @Autowired
+    public ReserveService reserveService;
 
     public VehicleService() {
     }
@@ -38,6 +43,11 @@ public class VehicleService {
 
     public List<Vehicle> findAll(Predicate<Vehicle> predicate) {
         return this.repository.findAll(predicate);
+    }
+
+    public List<Reserve> findReserves(int idVehicle) {
+        return this.reserveService
+                .findAll(reserve -> reserve.getVehicle().getId() == findOne(idVehicle).getId());
     }
 
     public void delete(int id) {

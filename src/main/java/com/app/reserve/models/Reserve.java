@@ -13,7 +13,6 @@ public class Reserve extends BaseEntity implements ToDTO<GetReserveDTO> {
     private Vehicle vehicle;
     private Date from;
     private Date to;
-    private float totalCost;
 
     // #region Getters and Setters
 
@@ -47,14 +46,6 @@ public class Reserve extends BaseEntity implements ToDTO<GetReserveDTO> {
 
     public void setTo(Date to) {
         this.to = to;
-    }
-
-    public float getTotalCost() {
-        return totalCost;
-    }
-
-    public void setTotalCost(float totalCost) {
-        this.totalCost = totalCost;
     }
 
     // #endregion

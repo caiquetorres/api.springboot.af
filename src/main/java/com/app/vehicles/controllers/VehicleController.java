@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
 import com.app.common.GetManyDefaultResponse;
+import com.app.reserve.dto.GetReserveDTO;
+import com.app.reserve.models.Reserve;
 import com.app.vehicles.dto.CreateVehicleDTO;
 import com.app.vehicles.dto.GetVehicleDTO;
 import com.app.vehicles.dto.UpdateVehicleDTO;
@@ -36,10 +38,12 @@ public class VehicleController {
     }
 
     @PostMapping
-    public ResponseEntity<GetVehicleDTO> createVehicle(@RequestBody final CreateVehicleDTO createVehicleDTO,
-            final HttpServletRequest request, final UriComponentsBuilder builder) {
+    public ResponseEntity<GetVehicleDTO> createVehicle(
+            @RequestBody final CreateVehicleDTO createVehicleDTO, final HttpServletRequest request,
+            final UriComponentsBuilder builder) {
         Vehicle entity = this.vehicleService.save(createVehicleDTO);
-        UriComponents uriComponents = builder.path(request.getRequestURI() + "/" + entity.toDto().getId()).build();
+        UriComponents uriComponents =
+                builder.path(request.getRequestURI() + "/" + entity.toDto().getId()).build();
         return ResponseEntity.created(uriComponents.toUri()).build();
     }
 
@@ -52,11 +56,26 @@ public class VehicleController {
     @GetMapping
     public ResponseEntity<GetManyDefaultResponse<GetVehicleDTO>> getVehicles() {
         List<Vehicle> entities = this.vehicleService.findAll(entity -> true);
-        GetManyDefaultResponse<GetVehicleDTO> getManyDefaultResponse = new GetManyDefaultResponse<>();
+        GetManyDefaultResponse<GetVehicleDTO> getManyDefaultResponse =
+                new GetManyDefaultResponse<>();
 
         getManyDefaultResponse.setTotal(entities.size());
-        getManyDefaultResponse
-                .setElements(entities.stream().map(entity -> entity.toDto()).collect(Collectors.toList()));
+        getManyDefaultResponse.setElements(
+                entities.stream().map(entity -> entity.toDto()).collect(Collectors.toList()));
+
+        return ResponseEntity.ok(getManyDefaultResponse);
+    }
+
+    @GetMapping("/{idVehicle}/reserves")
+    public ResponseEntity<GetManyDefaultResponse<GetReserveDTO>> getReserves(
+            @PathVariable int idClient) {
+        List<Reserve> entities = this.vehicleService.findReserves(idClient);
+        GetManyDefaultResponse<GetReserveDTO> getManyDefaultResponse =
+                new GetManyDefaultResponse<>();
+
+        getManyDefaultResponse.setTotal(entities.size());
+        getManyDefaultResponse.setElements(
+                entities.stream().map(entity -> entity.toDto()).collect(Collectors.toList()));
 
         return ResponseEntity.ok(getManyDefaultResponse);
     }

@@ -6,28 +6,10 @@ import com.app.common.ToEntity;
 import com.app.reserve.models.Reserve;
 
 public class CreateReserveDTO implements ToEntity<Reserve> {
-    private int clientId;
-    private int vehicleID;
     private Date from;
     private Date to;
 
     // #region Getters and Setters
-
-    public int getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(int clientId) {
-        this.clientId = clientId;
-    }
-
-    public int getVehicleID() {
-        return vehicleID;
-    }
-
-    public void setVehicleID(int vehicleID) {
-        this.vehicleID = vehicleID;
-    }
 
     public Date getFrom() {
         return from;
