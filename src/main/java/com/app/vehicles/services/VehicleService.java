@@ -1,11 +1,13 @@
 package com.app.vehicles.services;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
 import com.app.exceptions.DefaultExceptionMessages;
 import com.app.reserve.models.Reserve;
 import com.app.reserve.services.ReserveService;
+import com.app.utils.DateUtils;
 import com.app.vehicles.dto.CreateVehicleDTO;
 import com.app.vehicles.dto.UpdateVehicleDTO;
 import com.app.vehicles.models.Vehicle;
@@ -54,19 +56,27 @@ public class VehicleService {
                 .findAll(reserve -> reserve.getVehicle().getId() == findOne(id).getId());
     }
 
+    public void update(int id, UpdateVehicleDTO updateVehicleDTO) {
+        Vehicle vehicleEntity = this.findOne(id);
+        if (vehicleEntity == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    DefaultExceptionMessages.entityNotFound(Integer.toString(id)));
+
+        List<Reserve> reserves =
+                this.reserveService.findAll(entity -> entity.getVehicle().getId() == id);
+
+        this.repository.update(id, updateVehicleDTO);
+        reserves.stream()
+                .forEach(entity -> entity.setTotalCost(
+                        vehicleEntity.getDailyRate() * DateUtils.getDifferenceBetweenTwoDates(
+                                entity.getFrom(), entity.getTo(), TimeUnit.DAYS)));
+    }
+
     public void delete(int id) {
         if (!this.repository.contains(id))
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     DefaultExceptionMessages.entityNotFound(Integer.toString(id)));
 
         this.repository.delete(id);
-    }
-
-    public void update(int id, UpdateVehicleDTO updateVehicleDTO) {
-        if (!this.repository.contains(id))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    DefaultExceptionMessages.entityNotFound(Integer.toString(id)));
-
-        this.repository.update(id, updateVehicleDTO);
     }
 }

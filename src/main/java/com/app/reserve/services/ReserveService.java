@@ -11,6 +11,7 @@ import com.app.exceptions.DefaultExceptionMessages;
 import com.app.reserve.dto.CreateReserveDTO;
 import com.app.reserve.models.Reserve;
 import com.app.reserve.repositories.ReserveRepository;
+import com.app.utils.DateUtils;
 import com.app.vehicles.models.Vehicle;
 import com.app.vehicles.services.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,8 @@ public class ReserveService {
         Date to = createReserveDto.getTo();
         validatePayload(idVehicle, from, to);
 
-        entity.setTotalCost(vehicleEntity.getDailyRate() * getDateDiff(from, to, TimeUnit.DAYS));
+        entity.setTotalCost(vehicleEntity.getDailyRate()
+                * DateUtils.getDifferenceBetweenTwoDates(from, to, TimeUnit.DAYS));
 
         this.repository.save(entity);
         return entity;
@@ -111,11 +113,6 @@ public class ReserveService {
         if (calendar.get(Calendar.DAY_OF_WEEK) == 7)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "A vehicle cannot be delivered on sunday");
-    }
-
-    public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
-        long diffInMillies = date2.getTime() - date1.getTime();
-        return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
     }
 
     // #endregion
