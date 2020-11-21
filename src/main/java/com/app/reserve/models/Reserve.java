@@ -9,10 +9,11 @@ import com.app.reserve.dto.GetReserveDTO;
 import com.app.vehicles.models.Vehicle;
 
 public class Reserve extends BaseEntity implements ToDTO<GetReserveDTO> {
-    private Client client;
-    private Vehicle vehicle;
     private Date from;
     private Date to;
+    private float totalCost;
+    private Client client;
+    private Vehicle vehicle;
 
     // #region Getters and Setters
 
@@ -48,6 +49,14 @@ public class Reserve extends BaseEntity implements ToDTO<GetReserveDTO> {
         this.to = to;
     }
 
+    public float getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(float totalCost) {
+        this.totalCost = totalCost;
+    }
+
     // #endregion
 
     @Override
@@ -57,6 +66,7 @@ public class Reserve extends BaseEntity implements ToDTO<GetReserveDTO> {
         dto.setId(this.id);
         dto.setFrom(this.from);
         dto.setTo(this.to);
+        dto.setTotalCost(this.totalCost);
         dto.setClient(this.client.toDto());
         dto.setVehicle(this.vehicle.toDto());
 

@@ -3,6 +3,7 @@ package com.app.reserve.services;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import com.app.clients.models.Client;
 import com.app.clients.services.ClientService;
@@ -41,7 +42,11 @@ public class ReserveService {
         entity.setClient(clientEntity);
         entity.setVehicle(vehicleEntity);
 
-        validatePayload(idVehicle, createReserveDto.getFrom(), createReserveDto.getTo());
+        Date from = createReserveDto.getFrom();
+        Date to = createReserveDto.getTo();
+        validatePayload(idVehicle, from, to);
+
+        entity.setTotalCost(vehicleEntity.getDailyRate() * getDateDiff(from, to, TimeUnit.DAYS));
 
         this.repository.save(entity);
         return entity;
@@ -106,6 +111,11 @@ public class ReserveService {
         if (calendar.get(Calendar.DAY_OF_WEEK) == 7)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "A vehicle cannot be delivered on sunday");
+    }
+
+    public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+        long diffInMillies = date2.getTime() - date1.getTime();
+        return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
     }
 
     // #endregion

@@ -7,11 +7,11 @@ import com.app.vehicles.dto.GetVehicleDTO;
 
 public class GetReserveDTO {
     private int id;
-    private GetClientDTO client;
-    private GetVehicleDTO vehicle;
     private Date from;
     private Date to;
     private float totalCost;
+    private GetClientDTO client;
+    private GetVehicleDTO vehicle;
 
     // #region Getters and Setters
 
