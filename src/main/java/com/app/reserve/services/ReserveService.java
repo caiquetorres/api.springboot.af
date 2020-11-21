@@ -8,7 +8,6 @@ import com.app.clients.models.Client;
 import com.app.clients.services.ClientService;
 import com.app.exceptions.DefaultExceptionMessages;
 import com.app.reserve.dto.CreateReserveDTO;
-import com.app.reserve.dto.UpdateReserveDTO;
 import com.app.reserve.models.Reserve;
 import com.app.reserve.repositories.ReserveRepository;
 import com.app.vehicles.models.Vehicle;
