@@ -9,8 +9,10 @@ import com.app.clients.dto.UpdateClientDTO;
 import com.app.clients.models.Client;
 import com.app.clients.services.ClientService;
 import com.app.common.GetManyDefaultResponse;
+import com.app.reserve.dto.CreateReserveDTO;
 import com.app.reserve.dto.GetReserveDTO;
 import com.app.reserve.models.Reserve;
+import com.app.reserve.services.ReserveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,6 +33,9 @@ public class ClientController {
     @Autowired
     public ClientService clientService;
 
+    @Autowired
+    public ReserveService reserveService;
+
     public ClientController() {
     }
 
@@ -38,6 +43,16 @@ public class ClientController {
     public ResponseEntity<GetClientDTO> createClient(@RequestBody CreateClientDTO createClientDTO,
             HttpServletRequest request, UriComponentsBuilder builder) {
         Client entity = this.clientService.save(createClientDTO);
+        UriComponents uriComponents =
+                builder.path(request.getRequestURI() + "/" + entity.toDto().getId()).build();
+        return ResponseEntity.created(uriComponents.toUri()).build();
+    }
+
+    @PostMapping("/{idClient}/vehicles/{idVehicle}")
+    public ResponseEntity<GetReserveDTO> createReserve(
+            @RequestBody CreateReserveDTO createClientDTO, @PathVariable int idClient,
+            @PathVariable int idVehicle, HttpServletRequest request, UriComponentsBuilder builder) {
+        Reserve entity = this.reserveService.save(idClient, idVehicle, createClientDTO);
         UriComponents uriComponents =
                 builder.path(request.getRequestURI() + "/" + entity.toDto().getId()).build();
         return ResponseEntity.created(uriComponents.toUri()).build();
