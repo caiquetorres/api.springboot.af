@@ -1,5 +1,6 @@
 package com.app.vehicles.dto;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import com.app.common.ToEntity;
@@ -11,6 +12,7 @@ public class CreateVehicleDTO implements ToEntity<Vehicle> {
     private String model;
 
     @NotNull(message = "It's required to send a daily rate")
+    @Min(message = "The number must be greater than or equal to 0", value = 0)
     private Float dailyRate;
 
     // #region Getters and Setters

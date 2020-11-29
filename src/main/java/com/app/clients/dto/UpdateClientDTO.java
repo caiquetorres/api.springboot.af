@@ -9,7 +9,6 @@ import org.hibernate.validator.constraints.br.CPF;
 public class UpdateClientDTO implements ModifyEntity<Client> {
     @NotBlank(message = "It's required to send a name")
     @NotNull(message = "It's required to send a name")
-
     private String name;
 
     @NotBlank(message = "It's required to send a address")
