@@ -1,11 +1,17 @@
 package com.app.vehicles.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import com.app.common.ToEntity;
 import com.app.vehicles.models.Vehicle;
 
 public class CreateVehicleDTO implements ToEntity<Vehicle> {
+    @NotNull(message = "It's required to send a model")
+    @NotBlank(message = "It's required to send a model")
     private String model;
-    private float dailyRate;
+
+    @NotNull(message = "It's required to send a daily rate")
+    private Float dailyRate;
 
     // #region Getters and Setters
 

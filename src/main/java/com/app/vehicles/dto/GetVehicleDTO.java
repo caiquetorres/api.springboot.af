@@ -4,7 +4,6 @@ public class GetVehicleDTO {
     private int id;
     private String model;
     private float dailyRate;
-    private boolean isRented;
 
     // #region Getters and Setters
 
@@ -30,14 +29,6 @@ public class GetVehicleDTO {
 
     public void setDailyRate(float dailyRate) {
         this.dailyRate = dailyRate;
-    }
-
-    public boolean isRented() {
-        return isRented;
-    }
-
-    public void setRented(boolean isRented) {
-        this.isRented = isRented;
     }
 
     // #endregion
