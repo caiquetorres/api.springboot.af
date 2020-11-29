@@ -38,7 +38,7 @@ public class ReserveController {
 
         getManyDefaultResponse.setTotal(entities.size());
         getManyDefaultResponse.setElements(
-                entities.stream().map(entity -> entity.toDto()).collect(Collectors.toList()));
+                entities.stream().map(Reserve::toDto).collect(Collectors.toList()));
 
         return ResponseEntity.ok(getManyDefaultResponse);
     }

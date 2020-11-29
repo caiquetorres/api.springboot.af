@@ -25,6 +25,7 @@ public class Vehicle extends BaseEntity implements ToDTO<GetVehicleDTO> {
     public void setDailyRate(float dailyRate) {
         this.dailyRate = dailyRate;
     }
+
     // #endregion
 
     @Override

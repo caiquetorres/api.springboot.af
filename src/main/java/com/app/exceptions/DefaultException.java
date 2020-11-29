@@ -17,8 +17,7 @@ public class DefaultException {
         error.error = "Bad Request";
 
         exception.getBindingResult().getAllErrors().forEach(e -> {
-            String msg = e.getDefaultMessage();
-            error.message = msg;
+            error.message = e.getDefaultMessage();
         });
 
         return error;

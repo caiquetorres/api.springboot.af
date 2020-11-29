@@ -66,7 +66,7 @@ public class VehicleService {
                 this.reserveService.findAll(entity -> entity.getVehicle().getId() == id);
 
         this.repository.update(id, updateVehicleDTO);
-        reserves.stream()
+        reserves
                 .forEach(entity -> entity.setTotalCost(
                         vehicleEntity.getDailyRate() * DateUtils.getDifferenceBetweenTwoDates(
                                 entity.getFrom(), entity.getTo(), TimeUnit.DAYS)));

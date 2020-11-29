@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
 import com.app.common.GetManyDefaultResponse;
 import com.app.reserve.dto.GetReserveDTO;
 import com.app.reserve.models.Reserve;
@@ -61,7 +62,7 @@ public class VehicleController {
 
         getManyDefaultResponse.setTotal(entities.size());
         getManyDefaultResponse.setElements(
-                entities.stream().map(entity -> entity.toDto()).collect(Collectors.toList()));
+                entities.stream().map(Vehicle::toDto).collect(Collectors.toList()));
 
         return ResponseEntity.ok(getManyDefaultResponse);
     }
@@ -75,14 +76,14 @@ public class VehicleController {
 
         getManyDefaultResponse.setTotal(entities.size());
         getManyDefaultResponse.setElements(
-                entities.stream().map(entity -> entity.toDto()).collect(Collectors.toList()));
+                entities.stream().map(Reserve::toDto).collect(Collectors.toList()));
 
         return ResponseEntity.ok(getManyDefaultResponse);
     }
 
     @PutMapping("/{idVehicle}")
     public ResponseEntity<Void> updateVehicle(@PathVariable int idVehicle,
-            @Valid @RequestBody UpdateVehicleDTO updateVehicleDTO) {
+                                              @Valid @RequestBody UpdateVehicleDTO updateVehicleDTO) {
         this.vehicleService.update(idVehicle, updateVehicleDTO);
         return ResponseEntity.ok().build();
     }
