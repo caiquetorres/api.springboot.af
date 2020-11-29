@@ -52,7 +52,7 @@ public class ClientController {
 
     @PostMapping("/{idClient}/vehicles/{idVehicle}")
     public ResponseEntity<GetReserveDTO> createReserve(
-            @RequestBody CreateReserveDTO createClientDTO, @PathVariable int idClient,
+            @Valid @RequestBody CreateReserveDTO createClientDTO, @PathVariable int idClient,
             @PathVariable int idVehicle, HttpServletRequest request, UriComponentsBuilder builder) {
         Reserve entity = this.reserveService.save(idClient, idVehicle, createClientDTO);
         UriComponents uriComponents =
@@ -96,7 +96,7 @@ public class ClientController {
 
     @PutMapping("/{idClient}")
     public ResponseEntity<Void> updateClient(@PathVariable int idClient,
-            @RequestBody UpdateClientDTO updateClientDTO) {
+            @Valid @RequestBody UpdateClientDTO updateClientDTO) {
         this.clientService.update(idClient, updateClientDTO);
         return ResponseEntity.ok().build();
     }

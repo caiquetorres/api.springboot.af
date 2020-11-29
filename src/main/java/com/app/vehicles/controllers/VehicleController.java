@@ -82,7 +82,7 @@ public class VehicleController {
 
     @PutMapping("/{idVehicle}")
     public ResponseEntity<Void> updateVehicle(@PathVariable int idVehicle,
-            @RequestBody UpdateVehicleDTO updateVehicleDTO) {
+            @Valid @RequestBody UpdateVehicleDTO updateVehicleDTO) {
         this.vehicleService.update(idVehicle, updateVehicleDTO);
         return ResponseEntity.ok().build();
     }

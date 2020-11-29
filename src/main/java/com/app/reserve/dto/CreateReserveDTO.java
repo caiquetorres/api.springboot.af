@@ -1,12 +1,15 @@
 package com.app.reserve.dto;
 
 import java.util.Date;
-
+import javax.validation.constraints.NotNull;
 import com.app.common.ToEntity;
 import com.app.reserve.models.Reserve;
 
 public class CreateReserveDTO implements ToEntity<Reserve> {
+    @NotNull(message = "It's required to send a valid date")
     private Date from;
+
+    @NotNull(message = "It's required to send a valid date")
     private Date to;
 
     // #region Getters and Setters
