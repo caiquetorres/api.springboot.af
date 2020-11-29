@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
-
+import javax.validation.Valid;
 import com.app.common.GetManyDefaultResponse;
 import com.app.reserve.dto.GetReserveDTO;
 import com.app.reserve.models.Reserve;
@@ -39,8 +39,8 @@ public class VehicleController {
 
     @PostMapping
     public ResponseEntity<GetVehicleDTO> createVehicle(
-            @RequestBody final CreateVehicleDTO createVehicleDTO, final HttpServletRequest request,
-            final UriComponentsBuilder builder) {
+            @Valid @RequestBody CreateVehicleDTO createVehicleDTO, HttpServletRequest request,
+            UriComponentsBuilder builder) {
         Vehicle entity = this.vehicleService.save(createVehicleDTO);
         UriComponents uriComponents =
                 builder.path(request.getRequestURI() + "/" + entity.toDto().getId()).build();
@@ -82,7 +82,7 @@ public class VehicleController {
 
     @PutMapping("/{idVehicle}")
     public ResponseEntity<Void> updateVehicle(@PathVariable int idVehicle,
-            @RequestBody UpdateVehicleDTO updateVehicleDTO) {
+            @Valid @RequestBody UpdateVehicleDTO updateVehicleDTO) {
         this.vehicleService.update(idVehicle, updateVehicleDTO);
         return ResponseEntity.ok().build();
     }

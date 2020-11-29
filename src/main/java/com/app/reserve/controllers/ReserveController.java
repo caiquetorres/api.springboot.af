@@ -45,7 +45,6 @@ public class ReserveController {
 
     @DeleteMapping("/{idReserve}")
     public ResponseEntity<Void> updateReserve(@PathVariable int idReserve) {
-
         this.reserveService.delete(idReserve);
         return ResponseEntity.ok().build();
     }
