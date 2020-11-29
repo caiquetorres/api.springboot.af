@@ -3,6 +3,7 @@ package com.app.clients.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import com.app.clients.dto.CreateClientDTO;
 import com.app.clients.dto.GetClientDTO;
 import com.app.clients.dto.UpdateClientDTO;
@@ -40,8 +41,9 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<GetClientDTO> createClient(@RequestBody CreateClientDTO createClientDTO,
-            HttpServletRequest request, UriComponentsBuilder builder) {
+    public ResponseEntity<GetClientDTO> createClient(
+            @Valid @RequestBody CreateClientDTO createClientDTO, HttpServletRequest request,
+            UriComponentsBuilder builder) {
         Client entity = this.clientService.save(createClientDTO);
         UriComponents uriComponents =
                 builder.path(request.getRequestURI() + "/" + entity.toDto().getId()).build();
