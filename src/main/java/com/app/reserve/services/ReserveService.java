@@ -104,7 +104,6 @@ public class ReserveService {
                     "This vehicle has already a reserve in those dates");
 
         calendar.setTime(dtoFrom);
-        System.out.println(calendar.get(Calendar.DAY_OF_WEEK));
         if (calendar.get(Calendar.DAY_OF_WEEK) == 7)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "A vehicle cannot be rented on sunday");

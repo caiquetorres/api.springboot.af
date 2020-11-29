@@ -1,17 +1,22 @@
 package com.app.clients.dto;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import com.app.clients.models.Client;
 import com.app.common.ModifyEntity;
 import org.hibernate.validator.constraints.br.CPF;
 
 public class UpdateClientDTO implements ModifyEntity<Client> {
+    @NotBlank(message = "It's required to send a name")
     @NotNull(message = "It's required to send a name")
+
     private String name;
 
+    @NotBlank(message = "It's required to send a address")
     @NotNull(message = "It's required to send a address")
     private String address;
 
+    @NotBlank(message = "It's required to send a valid cpf")
     @NotNull(message = "It's required to send a valid cpf")
     @CPF(message = "It's required to send a valid cpf")
     private String cpf;
